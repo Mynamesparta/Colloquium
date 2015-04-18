@@ -6,6 +6,8 @@ namespace Colloquium
 {
     public class Point
     {
+        public int Index;
+        public bool taked = false;
         public double x, y, z;
         public Point(double _x, double _y, double _z)
         {
@@ -13,12 +15,19 @@ namespace Colloquium
             y = _y;
             z = _z;
         }
+        public bool operator==(Point a,Point b)
+        {
+            if(a.x==b.x&&a.y==b.y&&a.z==b.z)
+                return true;
+            return false;
+        }
         public Point() { }
     }
     public struct Verge
     {
         public Point a, b, c;
         public Point norm;
+        public List<Point> list=new List<Point>();
     }
     class Program
     {
@@ -30,6 +39,7 @@ namespace Colloquium
             //Console.Write(input_file.Read());
             List<Point> list_of_point = new List<Point>();
             input_file.readPoint(ref list_of_point);
+            List<Verge> C = new List<Verge>();
             //=========================algorithm===============
             int i, j, k, l;
             List<Point> Convex_hull = new List<Point>();
@@ -44,8 +54,44 @@ namespace Colloquium
                                 Convex_hull.Add(list_of_point[j]);
                                 Convex_hull.Add(list_of_point[k]);
                                 Convex_hull.Add(list_of_point[l]);
+                                C.Add(createVerge(list_of_point[j],list_of_point[k],list_of_point[l],list_of_point[i]));
+                                C.Add(createVerge(list_of_point[i],list_of_point[k],list_of_point[l],list_of_point[j]));
+                                C.Add(createVerge(list_of_point[i],list_of_point[j],list_of_point[l],list_of_point[k]));
+                                C.Add(createVerge(list_of_point[i],list_of_point[j],list_of_point[k],list_of_point[l]));
+                                list_of_point[i].taked = list_of_point[j].taked = list_of_point[k].taked = list_of_point[l].taked = true;
                             }
                         }
+            foreach (Verge verge in C)
+            {
+                for (i = 0; i < list_of_point.Count; i++)
+                {
+                    if (!list_of_point[i].taked)
+                    {
+                        if(isHighter(verge.norm,verge.a,list_of_point[i]))
+                        {
+                            verge.list.Add(list_of_point[i]);
+                        }
+                    }
+                }
+            }
+            double maxDistance;
+            double d;
+            int Index_of_max=0;
+            foreach (Verge verge in C)
+            {
+                if(verge.list.Count==0)
+                    continue;
+                maxDistance=distance(verge.a,verge.b,verge.c,verge.list[0]);
+                for (i = 1; i < verge.list.Count; i++)
+                {
+                    d = distance(verge.a, verge.b, verge.c, verge.list[i]);
+                    if (d > maxDistance)
+                    {
+                        maxDistance = d;
+                        Index_of_max = i;
+                    }
+                }
+            }
             //=================================================
 
             output_file.writePoint(list_of_point);
@@ -76,7 +122,7 @@ namespace Colloquium
         {
             Point vector = Normal(a, b, c);
             Verge v = new Verge();
-            if (isHighter(vector,a,x))
+            if (!isHighter(vector,a,x))
             {
                 v.a = a;
                 v.b = b;
@@ -114,8 +160,50 @@ namespace Colloquium
             vec1.x = point.x - beginer.x;
             vec1.y = point.y - beginer.y;
             vec1.z = point.z - beginer.z;
-            return ((norm.x * vec1.x + norm.y * vec1.y + norm.z * vec1.z) / 
-                (Math.Sqrt(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z) * Math.Sqrt(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z)) < 0);
+            return ((norm.x * vec1.x + norm.y * vec1.y + norm.z * vec1.z)>0);// / 
+                //(Math.Sqrt(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z) * Math.Sqrt(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z)) > 0);
+        }
+        public static void addtoHorizont(ref List<Point> horizont, Verge verge)
+        {
+            bool isNorm = true;
+            for (int i = 0; i < horizont.Count; i++)
+            {
+                if (horizont[i] == verge.a)
+                {
+                    isNorm = false;
+                    break;
+                }
+            }
+            if (isNorm)
+            {
+                horizont.Add(verge.a);
+            } 
+            isNorm = true;
+            for (int i = 0; i < horizont.Count; i++)
+            {
+                if (horizont[i] == verge.b)
+                {
+                    isNorm = false;
+                    break;
+                }
+            }
+            if (isNorm)
+            {
+                horizont.Add(verge.b);
+            }
+            isNorm = true;
+            for (int i = 0; i < horizont.Count; i++)
+            {
+                if (horizont[i] == verge.c)
+                {
+                    isNorm = false;
+                    break;
+                }
+            }
+            if (isNorm)
+            {
+                horizont.Add(verge.c);
+            }
         }
         
     }

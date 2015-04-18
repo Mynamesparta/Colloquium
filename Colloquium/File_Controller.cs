@@ -73,6 +73,7 @@ namespace Colloquium
                     point.y = a;
                     double.TryParse(number[2], out a);
                     point.z = a;
+                    point.Index = list.Count;
                     list.Add(point);
                 }
             }
