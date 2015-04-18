@@ -15,19 +15,14 @@ namespace Colloquium
             y = _y;
             z = _z;
         }
-        public bool operator==(Point a,Point b)
-        {
-            if(a.x==b.x&&a.y==b.y&&a.z==b.z)
-                return true;
-            return false;
-        }
         public Point() { }
     }
     public struct Verge
     {
         public Point a, b, c;
         public Point norm;
-        public List<Point> list=new List<Point>();
+        public List<Point> list;//=new List<Point>();
+        public List<Verge> list_2;// = new List<Verge>();
     }
     class Program
     {
@@ -76,21 +71,46 @@ namespace Colloquium
             }
             double maxDistance;
             double d;
-            int Index_of_max=0;
-            foreach (Verge verge in C)
+            Point point;
+            Verge _verge;
+            for (j = 0; j < C.Count;j++ )
             {
-                if(verge.list.Count==0)
+                _verge = C[j];
+                if (_verge.list.Count == 0)
                     continue;
-                maxDistance=distance(verge.a,verge.b,verge.c,verge.list[0]);
-                for (i = 1; i < verge.list.Count; i++)
+                maxDistance = distance(_verge.a, _verge.b, _verge.c, _verge.list[0]);
+                point= _verge.list[0];
+                for (i = 1; i < _verge.list.Count; i++)
                 {
-                    d = distance(verge.a, verge.b, verge.c, verge.list[i]);
+                    d = distance(_verge.a, _verge.b, _verge.c, _verge.list[i]);
                     if (d > maxDistance)
                     {
                         maxDistance = d;
-                        Index_of_max = i;
+                        point = _verge.list[i];
                     }
                 }
+                Stack<Verge> s = new Stack<Verge>();
+                s.Push(_verge);
+                List<Verge> V=new List<Verge>();
+                //bool b=true;
+                while (s.Count>0)
+                {
+                    _verge = s.Pop();
+                    C.Remove(_verge);
+                    foreach (Verge verge in _verge.list_2)
+                    {
+                        if(isHighter(verge.norm,verge.a,point))
+                        {
+                            s.Push(verge);
+                        }
+                    }
+                    V.Add(_verge);
+
+                }
+                List<Point> H = new List<Point>();//function;
+
+
+
             }
             //=================================================
 
@@ -204,6 +224,19 @@ namespace Colloquium
             {
                 horizont.Add(verge.c);
             }
+        }
+        public bool compere(Verge a1, Verge a2)
+        {
+            if (a1.a.x == a2.a.x || a1.a.x == a2.a.y || a1.a.x == a2.a.z)
+                if (a1.a.y == a2.a.x || a1.a.y == a2.a.y || a1.a.y == a2.a.z || a1.a.z == a2.a.x || a1.a.z == a2.a.y || a1.a.z == a2.a.z)
+                    return true;
+            if (a1.a.y == a2.a.x || a1.a.y == a2.a.y || a1.a.y == a2.a.z)
+                if (a1.a.x == a2.a.x || a1.a.x == a2.a.y || a1.a.x == a2.a.z || a1.a.z == a2.a.x || a1.a.z == a2.a.y || a1.a.z == a2.a.z)
+                    return true;
+            if (a1.a.z == a2.a.x || a1.a.z == a2.a.y || a1.a.z == a2.a.z)
+                if (a1.a.x == a2.a.x || a1.a.x == a2.a.y || a1.a.x == a2.a.z || a1.a.y == a2.a.x || a1.a.y == a2.a.y || a1.a.y == a2.a.z)
+                    return true;
+            return false;
         }
         
     }
