@@ -6,22 +6,19 @@ namespace Colloquium
 {
     public struct Point
     {
-        public float x, y, z;
+        public double x, y, z;
     }
     class Program
     {
         static void Main(string[] args)
         {
             File input_file = new File("input.txt");
+            File output_file = new File("output.txt");
             //input_file.Write("hello");
             //Console.Write(input_file.Read());
             List<Point> list_of_point = new List<Point>();
             input_file.readPoint(ref list_of_point);
-            Console.WriteLine("===");
-            foreach (Point point in list_of_point)
-            {
-                Console.WriteLine(point.x + " " + point.y + " " + point.z);
-            }
+            output_file.writePoint(list_of_point);
             //
             Console.Read();
         }

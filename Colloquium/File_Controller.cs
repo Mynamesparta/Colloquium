@@ -56,7 +56,7 @@ namespace Colloquium
             string[] number;
             string text;
             int lenght=new int();
-            float a = new float();
+            double a = new double();
             using (StreamReader sw = file.OpenText())
             {
                 int.TryParse(sw.ReadLine(), out lenght);
@@ -64,17 +64,17 @@ namespace Colloquium
                 text = sw.ReadLine();
                 while (text!=""&&text!=" ")
                 {
-                    Console.WriteLine(text);
+                    text=text.Replace('.', ',');
                     if (sw.EndOfStream)
                         break;
                     number = text.Split(' ');
                     point = new Point();
-                    float.TryParse(number[0], out a);
-                    point.x = float.Parse(number[0].ToString());
+                    double.TryParse(number[0], out a);
+                    Console.WriteLine(a);
                     point.x = a;
-                    float.TryParse(number[1], out a);
+                    double.TryParse(number[1], out a);
                     point.y = a;
-                    float.TryParse(number[2], out a);
+                    double.TryParse(number[2], out a);
                     point.z = a;
                     list.Add(point);
                     text = sw.ReadLine();
@@ -82,6 +82,17 @@ namespace Colloquium
                 }
             }
             //return list;
+        }
+        public void writePoint(List<Point> list)
+        {
+            using (StreamWriter sw = file.AppendText())
+            {
+                sw.WriteLine(list.Count.ToString());
+                foreach (Point point in list)
+                {
+                    sw.WriteLine(point.x.ToString() + " "+point.y.ToString()+" "+point.z.ToString()+" ");
+                }
+            }
         }
     }
 }
