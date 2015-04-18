@@ -61,24 +61,19 @@ namespace Colloquium
             {
                 int.TryParse(sw.ReadLine(), out lenght);
                 Console.WriteLine("Lenght:" + lenght);
-                text = sw.ReadLine();
-                while (text!=""&&text!=" ")
+                while (!sw.EndOfStream)
                 {
+                text = sw.ReadLine();
                     text=text.Replace('.', ',');
-                    if (sw.EndOfStream)
-                        break;
                     number = text.Split(' ');
                     point = new Point();
                     double.TryParse(number[0], out a);
-                    Console.WriteLine(a);
                     point.x = a;
                     double.TryParse(number[1], out a);
                     point.y = a;
                     double.TryParse(number[2], out a);
                     point.z = a;
                     list.Add(point);
-                    text = sw.ReadLine();
-                    Console.WriteLine("point:"+point.x + " " + point.y + " " + point.z);
                 }
             }
             //return list;
