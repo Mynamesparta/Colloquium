@@ -76,11 +76,7 @@ namespace Colloquium
         {
             Point vector = Normal(a, b, c);
             Verge v = new Verge();
-            Point vec1=new Point();
-            vec1.x = x.x - a.x;
-            vec1.y = x.y - a.y;
-            vec1.z = x.z - a.z;
-            if (((vector.x * vec1.x + vector.y * vec1.y + vector.z * vec1.z) / (Math.Sqrt(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z) * Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z))) < 0)
+            if (isHighter(vector,a,x))
             {
                 v.a = a;
                 v.b = b;
@@ -100,19 +96,27 @@ namespace Colloquium
                 return v;
             }
         }
-    public static double distance(Point a1, Point a2, Point a3, Point last_p)
-    {
-        //Визначники:
-        double V_1 = (a2.y-a1.y)*(a3.z-a1.z)-(a2.z-a1.z)*(a3.y-a1.y);
-        double V_2 = -(a2.x-a1.x)*(a3.z-a1.z)-(a2.z-a1.z)*(a3.x-a1.x);
-        double V_3 = (a2.x-a1.x)*(a3.y-a1.y)-(a2.y-a1.y)*(a3.x-a1.x);
-        //Вільний член в р-ні площини:
-        double D = -a1.x*V_1 + a1.y*V_2 -a1.z*V_3;
-        //Відстань:
-        double result = Math.Abs(V_1 * last_p.x + V_2 * last_p.y + V_3 * last_p.z + D) / Math.Sqrt(Math.Pow(V_1, 2) + Math.Pow(V_2, 2) + Math.Pow(V_3, 2));
-        return result;
-    }
+        public static double distance(Point a1, Point a2, Point a3, Point last_p)
+        {
+            //Визначники:
+            double V_1 = (a2.y-a1.y)*(a3.z-a1.z)-(a2.z-a1.z)*(a3.y-a1.y);
+            double V_2 = -(a2.x-a1.x)*(a3.z-a1.z)-(a2.z-a1.z)*(a3.x-a1.x);
+            double V_3 = (a2.x-a1.x)*(a3.y-a1.y)-(a2.y-a1.y)*(a3.x-a1.x);
+            //Вільний член в р-ні площини:
+            double D = -a1.x*V_1 + a1.y*V_2 -a1.z*V_3;
+            //Відстань:
+            double result = Math.Abs(V_1 * last_p.x + V_2 * last_p.y + V_3 * last_p.z + D) / Math.Sqrt(Math.Pow(V_1, 2) + Math.Pow(V_2, 2) + Math.Pow(V_3, 2));
+            return result;
+        }
+        public static bool isHighter(Point norm,Point beginer,Point point)
+        {
+            Point vec1=new Point();
+            vec1.x = point.x - beginer.x;
+            vec1.y = point.y - beginer.y;
+            vec1.z = point.z - beginer.z;
+            return ((norm.x * vec1.x + norm.y * vec1.y + norm.z * vec1.z) / 
+                (Math.Sqrt(vec1.x * vec1.x + vec1.y * vec1.y + vec1.z * vec1.z) * Math.Sqrt(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z)) < 0);
+        }
         
     }
-    //public isHighter(Point norm,Point beginer,Poin)
 }
